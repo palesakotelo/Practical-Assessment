@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>View Survey Results</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+    }
+    h1 {
+        text-align: center;
+    }
+    .survey-data {
+        margin: 20px auto;
+        max-width: 600px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 20px;
+        background-color: #f9f9f9;
+    }
+    .survey-data label {
+        font-weight: bold;
+    }
+    .clear-button {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+</style>
+</head>
+<body>
+    <h1>Survey Results</h1>
+    <div id="totalParticipants"></div>
+    <div id="averageAge"></div>
+    <div id="oldestPerson"></div>
+    <div id="youngestPerson"></div>
+    <div id="pastaPreference"></div>
+    <div id="papAndWorsPreference"></div>
+    <div id="pizzaPreference"></div>
+    <div id="averageMoviePreference"></div> <!-- Placeholder for average movie preference -->
+    <div id="radioPreference"></div> <!-- Placeholder for average radio preference -->
+    <div id="eatOutPreference"></div> <!-- Placeholder for average eat out preference -->
+    <div id="watchTVPreference"></div> <!-- Placeholder for average watch TV preference -->
+    <div id="surveyResults" class="survey-data">
+        <!-- Survey results will be displayed here -->
+    </div>
+     
+    <div class="clear-button">
+         <button onclick="clearLocalStorage()">CLEAR LOCAL STORAGE</button>
+         <button onclick="window.location.href='fill_survey.html'">FILL OUT SURVEY</button><br><br>
+    </div>
+
+    <script>
+        // Retrieve survey data from local storage
+        var surveyData = JSON.parse(localStorage.getItem('surveyData'));
+
+        // Function to calculate age based on date of birth
+        function calculateAge(dob) {
+            var dobYear = new Date(dob).getFullYear();
+            var currentYear = new Date().getFullYear();
+            return currentYear - dobYear;
+        }
+
+        // Function to display survey data
+        function displaySurveyData() {
+            if (surveyData && surveyData.length > 0) {
+                var surveyResultsHTML = '';
+                var totalAge = 0;
+                var oldestAge = -Infinity;
+                var youngestAge = Infinity;
+                var pastaLovers = 0;
+                var papAndWorsLovers = 0;
+                var pizzaLovers = 0;
+                var checkboxesCount = 0; // Counter for selected checkboxes
+                var radioListenersCount = 0; // Counter for people who like to listen to radio
+                var eatOutCount = 0; // Counter for people who like to eat out
+                var watchTVCount = 0; // Counter for people who like to watch TV
+
+                for (var i = 0; i < surveyData.length; i++) {
+                    var data = surveyData[i];
+                    var age = calculateAge(data.dob);
+                    totalAge += age;
+                    if (age > oldestAge) {
+                        oldestAge = age;
+                    }
+                    if (age < youngestAge) {
+                        youngestAge = age;
+                    }
+                    if (data.food === 'Pasta') {
+                        pastaLovers++;
+                    }
+                    if (data.food === 'Pap and wors') {
+                        papAndWorsLovers++;
+                    }
+                    if (data.food === 'Pizza') {
+                        pizzaLovers++;
+                    }
+                    if (data.movies === 'strongly_agree' || data.movies === 'agree') {
+                        checkboxesCount++;
+                    }
+                    if (data.radio === 'yes') {
+                        radioListenersCount++;
+                    }
+                    if (data.eat_out === 'yes') {
+                        eatOutCount++;
+                    }
+                    if (data.watch_tv === 'yes') {
+                        watchTVCount++;
+                    }
+
+                    surveyResultsHTML += '<div class="survey-data">';
+                    surveyResultsHTML += '<label>Participant ' + (i + 1) + ':</label><br>';
+                    surveyResultsHTML += '<label>First Name:</label> ' + data.firstName + '<br>';
+                    surveyResultsHTML += '<label>Email:</label> ' + data.email + '<br>';
+                    surveyResultsHTML += '<label>Date of Birth:</label> ' + data.dob + ' (Age: ' + age + ')<br>';
+                    surveyResultsHTML += '<label>Contact Number:</label> ' + data.contactNumber + '<br>';
+                    surveyResultsHTML += '<label>Favorite Food:</label> ' + data.food + '<br>';
+                    surveyResultsHTML += '<label>Like to watch movies:</label> <input type="checkbox" disabled="true" ' + (data.movies === 'strongly_agree' || data.movies === 'agree' ? 'checked' : '') + '><br>';
+                    surveyResultsHTML += '<label>Like to listen to radio:</label> ' + data.radio + '<br>';
+                    surveyResultsHTML += '<label>Like to eat out:</label> ' + data.eat_out + '<br>';
+                    surveyResultsHTML += '<label>Like to watch TV:</label> ' + data.watch_tv + '<br>';
+                    surveyResultsHTML += '</div>';
+                }
+
+                // Calculate and display the percentage of people who like to watch movies
+                var moviePreferencePercentage = (checkboxesCount / surveyData.length) * 100;
+                document.getElementById('averageMoviePreference').textContent = "Average Percentage of People Who Like to Watch Movies: " + moviePreferencePercentage.toFixed(2) + "%";
+
+                // Display total number of survey participants
+                document.getElementById('totalParticipants').textContent = "Total Number Of Survey: " + surveyData.length;
+
+                // Calculate and display average age
+                var averageAge = totalAge / surveyData.length;
+                document.getElementById('averageAge').textContent = "Average Age: " + averageAge.toFixed(2);
+
+                // Display the age of the oldest person
+                document.getElementById('oldestPerson').textContent = "Oldest Person's Age: " + oldestAge;
+
+                // Display the age of the youngest person
+                document.getElementById('youngestPerson').textContent = "Youngest Person's Age: " + youngestAge;
+
+                // Calculate and display the percentage of people who like pasta
+                var pastaPreferencePercentage = (pastaLovers / surveyData.length) * 100;
+                document.getElementById('pastaPreference').textContent = "Percentage of People Who Like Pasta: " + pastaPreferencePercentage.toFixed(2) + "%";
+
+                // Calculate and display the percentage of people who like pap and wors
+                var papAndWorsPreferencePercentage = (papAndWorsLovers / surveyData.length) * 100;
+                document.getElementById('papAndWorsPreference').textContent = "Percentage of People Who Like Pap and Wors: " + papAndWorsPreferencePercentage.toFixed(2) + "%";
+                
+                // Calculate and display the percentage of people who like pizza
+                var pizzaPreferencePercentage = (pizzaLovers / surveyData.length) * 100;
+                document.getElementById('pizzaPreference').textContent = "Percentage of People Who Like Pizza: " + pizzaPreferencePercentage.toFixed(2) + "%";
+
+                // Calculate and display the average percentage of people who like to listen to radio
+                var radioPreferencePercentage = (radioListenersCount / surveyData.length) * 100;
+                document.getElementById('radioPreference').textContent = "Average Percentage of People Who Like to Listen to Radio: " + radioPreferencePercentage.toFixed(2) + "%";
+
+                // Calculate and display the average percentage of people who like to eat out
+                var eatOutPreferencePercentage = (eatOutCount / surveyData.length) * 100;
+                document.getElementById('eatOutPreference').textContent = "Average Percentage of People Who Like to Eat Out: " + eatOutPreferencePercentage.toFixed(2) + "%";
+
+                // Calculate and display the average percentage of people who like to watch TV
+                var watchTVPreferencePercentage = (watchTVCount / surveyData.length) * 100;
+                document.getElementById('watchTVPreference').textContent = "Average Percentage of People Who Like to Watch TV: " + watchTVPreferencePercentage.toFixed(2) + "%";
+            } else {
+                document.getElementById('surveyResults').innerHTML = '<p>No survey data available.</p>';
+                document.getElementById('totalParticipants').textContent = ""; // Clear total number of survey participants
+                document.getElementById('averageAge').textContent = ""; // Clear average age
+                document.getElementById('oldestPerson').textContent = ""; // Clear oldest person's age
+                document.getElementById('youngestPerson').textContent = ""; // Clear youngest person's age
+                document.getElementById('pastaPreference').textContent = ""; // Clear pasta preference percentage
+                document.getElementById('papAndWorsPreference').textContent = ""; // Clear pap and wors preference percentage
+                document.getElementById('pizzaPreference').textContent = ""; // Clear pizza preference percentage
+                document.getElementById('averageMoviePreference').textContent = ""; // Clear average movie preference
+                document.getElementById('radioPreference').textContent = ""; // Clear average radio preference
+                document.getElementById('eatOutPreference').textContent = ""; // Clear average eat out preference
+                document.getElementById('watchTVPreference').textContent = ""; // Clear average watch TV preference
+            }
+        }
+
+        // Call the displaySurveyData function when the page loads
+        displaySurveyData();
+
+        // Function to clear local storage
+        function clearLocalStorage() {
+            localStorage.removeItem('surveyData');
+            displaySurveyData(); // Update survey data display
+        }
+    </script>
+</body>
+</html>

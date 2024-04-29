@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Form</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f4f4f4;
+    }
+    form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: auto; /* Center the form */
+        max-width: 500px; /* Limit the width of the form */
+    }
+    input[type="text"], input[type="email"], input[type="date"], input[type="tel"], input[type="radio"], input[type="checkbox"] {
+        margin-bottom: 20px;
+    }
+    input[type="text"], input[type="email"], input[type="date"], input[type="tel"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+    input[type="radio"] {
+        margin-right: 10px;
+    }
+    input[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 15px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    input[type="submit"]:hover {
+        background-color: #45a049;
+    }
+    .scale-text {
+        margin-bottom: 10px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+</head>
+<body>
+    <form id="surveyForm" action="#" method="post">
+		<label for="firstName">First Name:</label>
+		<input type="text" id="firstName" name="firstName" required><br>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br>
+        <label for="dob">Date of Birth:</label>
+        <input type="date" id="dob" name="dob" required><br>
+        <label for="contactNumber">Contact Number:</label>
+        <input type="tel" id="contactNumber" name="contactNumber" required><br>
+        <label>What is your favourite food?</label><br>
+        <input type="radio" id="pizza" name="food" value="Pizza" required>
+        <label for="pizza">Pizza</label>
+        <input type="radio" id="pasta" name="food" value="Pasta" required>
+        <label for="pasta">Pasta</label>
+        <input type="radio" id="papAndWors" name="food" value="Pap and wors" required>
+        <label for="papAndWors">Pap and wors</label>
+        <input type="radio" id="other" name="food" value="Other" required>
+        <label for="other">Other</label><br>
+        <label class="scale-text">Please rate your level of agreement on a scale of 1 to 5, with 1 being "strongly agree" and 5 being "strongly disagree."</label><br>
+        <table>
+            <tr>
+                <th></th>
+                <th>Strongly Agree</th>
+                <th>Agree</th>
+                <th>Neutral</th>
+                <th>Disagree</th>
+                <th>Strongly Disagree</th>
+            </tr>
+            <tr>
+                <td>I like to watch movies</td>
+                <td><input type="radio" name="movies" value="strongly_agree" required></td>
+                <td><input type="radio" name="movies" value="agree" required></td>
+                <td><input type="radio" name="movies" value="neutral" required></td>
+                <td><input type="radio" name="movies" value="disagree" required></td>
+                <td><input type="radio" name="movies" value="strongly_disagree" required></td>
+            </tr>
+            <tr>
+                <td>I like to listen to radio</td>
+                <td><input type="radio" name="radio" value="strongly_agree" required></td>
+                <td><input type="radio" name="radio" value="agree" required></td>
+                <td><input type="radio" name="radio" value="neutral" required></td>
+                <td><input type="radio" name="radio" value="disagree" required></td>
+                <td><input type="radio" name="radio" value="strongly_disagree" required></td>
+            </tr>
+            <tr>
+                <td>I like to eat out</td>
+                <td><input type="radio" name="eat_out" value="strongly_agree" required></td>
+                <td><input type="radio" name="eat_out" value="agree" required></td>
+                <td><input type="radio" name="eat_out" value="neutral" required></td>
+                <td><input type="radio" name="eat_out" value="disagree" required></td>
+                <td><input type="radio" name="eat_out" value="strongly_disagree" required></td>
+            </tr>
+            <tr>
+                <td>I like to watch TV</td>
+                <td><input type="radio" name="watch_tv" value="strongly_agree" required></td>
+                <td><input type="radio" name="watch_tv" value="agree" required></td>
+                <td><input type="radio" name="watch_tv" value="neutral" required></td>
+                <td><input type="radio" name="watch_tv" value="disagree" required></td>
+                <td><input type="radio" name="watch_tv" value="strongly_disagree" required></td>
+            </tr>
+        </table>
+            <button onclick="fillSurvey()">FILL OUT SURVEY</button><br><br>
+            <button onclick="window.location.href='view_survey.html'">VIEW SURVEY RESULTS</button><br><br>
+    </form>
+
+    <script>
+        function fillSurvey() {
+            // Get form data
+            var formData = {
+                firstName: document.getElementById("firstName").value,
+                email: document.getElementById("email").value,
+                dob: document.getElementById("dob").value,
+                contactNumber: document.getElementById("contactNumber").value,
+                food: document.querySelector('input[name="food"]:checked').value,
+                movies: document.querySelector('input[name="movies"]:checked').value,
+                radio: document.querySelector('input[name="radio"]:checked').value,
+                eat_out: document.querySelector('input[name="eat_out"]:checked').value,
+                watch_tv: document.querySelector('input[name="watch_tv"]:checked').value
+            };
+
+            // Calculate average age
+            var dobYear = new Date(formData.dob).getFullYear();
+            var currentYear = new Date().getFullYear();
+            var age = currentYear - dobYear;
+
+            // Save form data and average age to local storage
+            var surveyData = JSON.parse(localStorage.getItem('surveyData')) || [];
+            surveyData.push({ ...formData, age: age });
+            localStorage.setItem('surveyData', JSON.stringify(surveyData));
+        }
+    </script>
+</body>
+</html>
